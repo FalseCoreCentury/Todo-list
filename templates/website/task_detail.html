@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load crispy_forms_filters %}
+
+{% block title %}Task Details{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm p-4">
+    <h2 class="mb-4">📝 Task Details</h2>
+
+    <div class="mb-3">
+        <strong>Content:</strong>
+        <p class="form-control-plaintext">{{ task.content }}</p>
+    </div>
+
+    <div class="mb-3">
+        <strong>Created:</strong>
+        <p class="form-control-plaintext">{{ task.created_at|date:"Y-m-d H:i" }}</p>
+    </div>
+
+    <div class="mb-3">
+        <strong>Deadline:</strong>
+        <p class="form-control-plaintext">
+            {% if task.deadline %}
+                {{ task.deadline|date:"Y-m-d H:i" }}
+            {% else %}
+                <span class="text-muted">No deadline</span>
+            {% endif %}
+        </p>
+    </div>
+
+    <div class="mb-3">
+        <strong>Status:</strong>
+        <span class="badge {% if task.is_done %}bg-success{% else %}bg-warning text-dark{% endif %}">
+            {% if task.is_done %}
+                ✅ Completed
+            {% else %}
+                ⏳ In process
+            {% endif %}
+        </span>
+    </div>
+
+    <div class="mb-3">
+        <strong>Tags:</strong>
+        {% for tag in task.tags.all %}
+            <span class="badge bg-info text-dark me-1">{{ tag.name }}</span>
+        {% empty %}
+            <span class="text-muted">No tags</span>
+        {% endfor %}
+    </div>
+
+    <div class="mt-4">
+        <a href="{% url 'website:home' %}" class="btn btn-outline-secondary">← Back to List</a>
+    </div>
+</div>
+{% endblock %}
+

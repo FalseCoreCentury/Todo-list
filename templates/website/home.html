@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load crispy_forms_filters %}
+
+{% block title %}Todo List{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">📝 Todo List</h1>
+
+<a class="btn btn-primary mb-3" href="{% url 'website:task_create' %}">➕ Add New Task</a>
+
+{% for task in tasks %}
+    <div class="card mb-3 {% if task.is_done %}border-secondary{% endif %}">
+        <div class="card-body">
+            <h5 class="card-title {% if task.is_done %}text-muted text-decoration-line-through{% endif %}">
+                {{ task.content }}
+            </h5>
+            <p class="card-text">
+                <strong>Created:</strong> {{ task.created_at|date:"Y-m-d H:i" }}<br>
+                {% if task.deadline %}
+                    <strong>Deadline:</strong> {{ task.deadline|date:"Y-m-d H:i" }}<br>
+                {% endif %}
+                <strong>Tags:</strong>
+                {% for tag in task.tags.all %}
+                    <span class="badge bg-secondary">{{ tag.name }}</span>
+                {% empty %}
+                    No tags
+                {% endfor %}
+            </p>
+            <div>
+                <a class="btn btn-sm btn-outline-secondary" href="{% url 'website:task_update' task.id %}">✏️ Edit</a>
+                <a class="btn btn-sm btn-outline-danger" href="{% url 'website:task_delete' task.id %}">🗑️ Delete</a>
+                {% if task.is_done %}
+                    <a class="btn btn-sm btn-outline-warning" href="{% url 'website:undo_task' task.id %}">
+                        ↩️ Undo
+                    </a>
+                {% else %}
+                    <a class="btn btn-sm btn-outline-success" href="{% url 'website:task_complete' task.id %}">
+                        ✅ Complete
+                    </a>
+                {% endif %}
+                </a>
+            </div>
+        </div>
+    </div>
+{% empty %}
+    <p>No tasks yet.</p>
+{% endfor %}
+{% endblock %}
