@@ -27,16 +27,22 @@
                 {% endfor %}
             </p>
             <div>
-                <a class="btn btn-sm btn-outline-secondary" href="{% url 'website:task_update' task.id %}">✏️ Edit</a>
-                <a class="btn btn-sm btn-outline-danger" href="{% url 'website:task_delete' task.id %}">🗑️ Delete</a>
+                <a class="btn btn-sm btn-outline-secondary mb-4" href="{% url 'website:task_update' task.id %}">✏️ Edit</a>
+                <a class="btn btn-sm btn-outline-danger mb-4" href="{% url 'website:task_delete' task.id %}">🗑️ Delete</a>
                 {% if task.is_done %}
-                    <a class="btn btn-sm btn-outline-warning" href="{% url 'website:undo_task' task.id %}">
-                        ↩️ Undo
-                    </a>
+                    <form method="post" action="{% url 'tasks:undo_task' task.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-outline-warning">
+                        Undo
+                        </button>
+                    </form>
                 {% else %}
-                    <a class="btn btn-sm btn-outline-success" href="{% url 'website:task_complete' task.id %}">
+                    <form method="post" action="{% url 'tasks:task_complete' task.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-outline-success">
                         ✅ Complete
-                    </a>
+                        </button>
+                    </form>
                 {% endif %}
                 </a>
             </div>
