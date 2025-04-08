@@ -22,20 +22,20 @@ class TaskListView(ListView):
         return Task.objects.all().order_by("is_done", "-created_at")
 
 
-def complete_task(request, pk):
-    task = get_object_or_404(Task, pk=pk)
+class CompleteTaskView(View):
+    def post(self, request, pk):
+        task = get_object_or_404(Task, pk=pk)
+        task.is_done = True
+        task.save()
+        return redirect("tasks:home")
 
-    task.is_done = True
-    task.save()
-    return redirect("tasks:home")
 
-
-def undo_task(request, pk):
-    task = get_object_or_404(Task, pk=pk)
-
-    task.is_done = False
-    task.save()
-    return redirect("tasks:home")
+class UndoTaskView(View):
+    def post(self, request, pk):
+        task = get_object_or_404(Task, pk=pk)
+        task.is_done = False
+        task.save()
+        return redirect("tasks:home")
 
 
 class TaskDetailView(DetailView):
@@ -70,7 +70,7 @@ class TaskDeleteView(DeleteView):
 
 
 class ToggleTaskStatusView(View):
-    def get(self, request, pk):
+    def post(self, request, pk):
         task = get_object_or_404(Task, pk=pk)
         task.is_done = not task.is_done
         task.save()
