@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load crispy_forms_filters %}
+
+{% block title %}Tag List{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <a class="btn btn-primary mb-4" href="{% url 'website:tag_create' %}">➕ Add New Tag</a>
+
+    <div class="list-group">
+      {% for tag in tags %}
+        <div class="list-group-item d-flex justify-content-between align-items-center">
+          <span>{{ tag.name }}</span>
+
+          <div>
+            <a class="btn btn-sm btn-outline-secondary" href="{% url 'website:tag_update' tag.id %}">✏️ Edit</a>
+            <a class="btn btn-sm btn-outline-danger" href="{% url 'website:tag_delete' tag.id %}">🗑️ Delete</a>
+          </div>
+        </div>
+      {% empty %}
+        <p>No tags available</p>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}
